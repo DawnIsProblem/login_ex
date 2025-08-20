@@ -1,0 +1,110 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>로그인 데모 (Session / Cookie / JWT / Social)</title>
+
+    <!-- 정적 리소스 참조 -->
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+<div class="wrap">
+    <div class="title">
+        <h1 style="margin:0">Login Demo</h1>
+        <span class="badge">Session · Cookie · JWT · Social</span>
+    </div>
+
+    <div class="card">
+        <div class="tabs" id="tabs">
+            <div class="tab active" data-tab="session">세션(쿠키)</div>
+            <div class="tab" data-tab="cookie">서명 쿠키</div>
+            <div class="tab" data-tab="jwt">JWT</div>
+            <div class="tab" data-tab="social">소셜</div>
+        </div>
+
+        <div class="grid">
+            <div>
+                <!-- Session -->
+                <div class="panel active" id="panel-session">
+                    <form id="form-session" class="stack" onsubmit="return false;">
+                        <div class="field">
+                            <label>Login ID</label>
+                            <input name="loginId" value="user_1" autocomplete="username" />
+                        </div>
+                        <div class="field">
+                            <label>Password</label>
+                            <input type="password" name="password" value="1234" autocomplete="current-password" />
+                        </div>
+                        <div class="stack">
+                            <button class="btn primary" id="btnSessionLogin">세션 로그인</button>
+                            <button class="btn outline" id="btnSessionMe" type="button">/api/session/me</button>
+                            <button class="btn warn" id="btnSessionLogout" type="button">세션 로그아웃</button>
+                        </div>
+                        <div class="muted">* 세션 로그인은 JSESSIONID 쿠키가 생성됩니다.</div>
+                    </form>
+                </div>
+
+                <!-- Signed Cookie -->
+                <div class="panel" id="panel-cookie">
+                    <form id="form-cookie" class="stack" onsubmit="return false;">
+                        <div class="field">
+                            <label>Login ID</label>
+                            <input name="loginId" value="user_1" />
+                        </div>
+                        <div class="field">
+                            <label>Password</label>
+                            <input type="password" name="password" value="1234" />
+                        </div>
+                        <div class="stack">
+                            <button class="btn primary" id="btnCookieLogin">쿠키 로그인</button>
+                            <button class="btn outline" id="btnCookiePing" type="button">보호 API 호출(예시)</button>
+                            <button class="btn warn" id="btnCookieLogout" type="button">쿠키 로그아웃</button>
+                        </div>
+                        <div class="muted">* 서버가 서명한 AUTH 쿠키를 발급합니다.</div>
+                    </form>
+                </div>
+
+                <!-- JWT -->
+                <div class="panel" id="panel-jwt">
+                    <form id="form-jwt" class="stack" onsubmit="return false;">
+                        <div class="field">
+                            <label>Login ID</label>
+                            <input name="loginId" value="user_1" />
+                        </div>
+                        <div class="field">
+                            <label>Password</label>
+                            <input type="password" name="password" value="1234" />
+                        </div>
+                        <div class="stack">
+                            <button class="btn primary" id="btnJwtLogin">JWT 로그인</button>
+                            <button class="btn outline" id="btnJwtPing" type="button">Authorization 호출(예시)</button>
+                            <button class="btn warn" id="btnJwtLogout" type="button">토큰 삭제</button>
+                        </div>
+                        <div class="muted">* accessToken은 데모로 메모리에 보관합니다.</div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                    <div class="muted">Result / Console</div>
+                    <div class="stack">
+                        <button class="btn outline" type="button" id="btnGoHome">홈 페이지</button>
+                        <button class="btn outline" type="button" id="btnClear">Clear</button>
+                    </div>
+                </div>
+                <pre id="console" class="card mono" style="min-height:220px;white-space:pre-wrap"></pre>
+
+                <div class="hr"></div>
+                <div class="muted">
+                    • 쿠키 호출 시 <code>credentials: 'include'</code> 필요<br/>
+                    • CSRF 보호가 켜진 POST에는 <code>X-XSRF-TOKEN</code> 헤더 필요할 수 있음<br/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/login.js}"></script>
+</body>
+</html>

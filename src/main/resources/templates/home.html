@@ -1,0 +1,58 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Home</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+<div class="wrap">
+    <header class="header">
+        <h1>Home</h1>
+        <nav class="actions">
+            <a class="btn" href="/login">로그인 페이지</a>
+            <button id="btnLogoutAll" class="btn warn">모두 로그아웃</button>
+        </nav>
+    </header>
+
+    <section class="card">
+        <p class="hello">
+            안녕하세요, <strong id="username">user</strong> 님! <span id="authType" class="tag"></span>
+        </p>
+        <p class="muted">이 페이지는 로그인 성공 후 접근하는 데모 페이지입니다.</p>
+    </section>
+
+    <section class="grid">
+        <div class="card">
+            <h3>세션(쿠키)</h3>
+            <div class="stack">
+                <button id="btnSessionMe" class="btn">/api/session/me</button>
+                <button id="btnSessionLogout" class="btn warn">세션 로그아웃</button>
+            </div>
+        </div>
+        <div class="card">
+            <h3>서명 쿠키</h3>
+            <div class="stack">
+                <button id="btnCookieMe" class="btn">/api/cookie/me</button>
+                <button id="btnCookieLogout" class="btn warn">쿠키 로그아웃</button>
+            </div>
+        </div>
+        <div class="card">
+            <h3>JWT</h3>
+            <div class="stack">
+                <button id="btnJwtPing" class="btn">/api/jwt/protected</button>
+                <button id="btnJwtClear" class="btn warn">토큰 제거</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h3>Console</h3>
+        <pre id="console" class="mono" style="min-height:160px;white-space:pre-wrap"></pre>
+        <button id="btnClear" class="btn">Clear</button>
+    </section>
+</div>
+<script defer th:src="@{/js/home.js}"></script>
+</body>
+</html>
