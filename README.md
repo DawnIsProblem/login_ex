@@ -1,23 +1,69 @@
-## 📋 Description
+## 📋 Spring Security Multi-Login Example
+이 프로젝트는 **Spring Security**를 활용하여 다양한 로그인 방식을 구현한 예제입니다.  
+(1) **세션 로그인**, (2) **서명 쿠키 기반 로그인**, (3) **JWT 기반 로그인** — 세 가지 방법을 비교·연습할 수 있도록 구성되었습니다.  
+thymeleaf를 이용해서 테스트 페이지를 작성하였습니다.
+
+## How To Run
+```./gradlew bootRun```
+
+
+## 📌 Summary
+### SessionLogin  
+
+📍 **흐름**
+1. 로그인 성공 → 서버가 **세션 저장소에 사용자 상태** 저장, 세션ID 발급
+2. 응답에 `Set-Cookie: JSESSIONID=...; HttpOnly; Secure; SameSite=Lax`
+3. 이후 요청마다 브라우저가 JSESSIONID를 자동 전송 → 서버가 세션 상태로 사용자 식별
+4. 로그아웃 → 서버에서 세션 무효화, 쿠키 만료
+
+**장점**: 구현 단순, 보안 우수(서버가 상태 보유)  
+**주의**: 수평 확장 시 세션 공유 필요(보통 Redis), CSRF 방어 필요
 
 ---
 
-### 📌 Config
-1. `data.sql`을 어플리케이션 실행 후 동작하게 설정합니다.
-2. `application.yml`을 사용합니다.
-3. **DateBase는** **MySQL을** 기본적으로 사용하게 설정했습니다.
-4. 작성자가 주로 사용하는 `CommonResponse.java`, `SwaggerConfig.java`, `GlobalException.java` 파일을 사용합니다.
+### Cookie Login
 
-### 📌 GitHub
-1. **PR TEMPLATE** 사용합니다.
-2. **Feature, Fix, Bug, Meeting, Refactoring** 관련한 **ISSUE_TEMPLATE**를 사용합니다.
-3. **TEMPLATE**를 이용해서 **ISSUE**를 생성 시 원격 리포지토리에 설정한 브랜치가 자동으로 생성됩니다.
+**📍 종류**
+1) **서버 상태 저장형** (Session Login과 동일한 방식)
+- 쿠키엔 오직 **랜덤 세션ID**(JSESSIONID 등)만 들어감.
+- 실제 로그인 상태/사용자 정보는 **서버(메모리/Redis/DB)**에 저장.
+- 장점: 쿠키 탈취만으로는 서버에서 세션을 강제로 끊을 수 있음(서버 세션 삭제).
+- 단점: **상태(stateful)** 유지(스케일링 시 세션 공유 필요).
 
-### 📌 PS
-1. 해당 프로젝트를 복사하서 사용하실 때 `setting.gradle`, `build.gradle`, **프로젝트 패키지**(ex. **com.template.basic_template**)를 수정하여 사용해주세요.
-2. **GitHub** 관련 **TEMPLATE**들은 **JIRA**와 연동 될 수 있으며 다른 **TEMPLATE**에 준비되어있습니다.
-3. **Github-Action**을 이용한 **CI/CD**설정 파일을 변수만 수정하여 편하게 사용할 수 있게 추가할 예정입니다.
-4. 템플릿 사용 후 `README.md` 파일의 내용은 지우고 사용해주세요.
+> 이건 사실상 구현한 “세션 로그인”이므로, “쿠키만”으로 새롭게 할 가치가 적다.
+
+2) **서버 상태 비저장형(Stateless) 서명 쿠키**
+- 쿠키 자체가 “증명서” 역할. **{payload}.{signature}** 형태로 **HMAC 서명**(필수), 필요시 **암호화**(선택).
+- 서버는 쿠키만 검증해서 **바로 인증**(서버 저장소 없음).
+- 장점: **완전 무상태**, 빠르고 간단.
+- 단점:
+    - **쿠키가 곧 액세스 토큰**이라 탈취되면 만료까지 악용 가능.
+    - **서버측 강제 로그아웃/블랙리스트**가 어렵다(키 전체 로테이션 or 블랙리스트 저장하면 결국 상태가 생김).
+    - **CSRF**를 반드시 고려해야 함(쿠키는 브라우저가 자동 전송).
+
+> “JWT 없이 쿠키만”으로 하는 가장 흔한 방식.
+JWT의 포맷만 다를 뿐, 개념은 서명된 토큰을 쿠키에 싣는다는 점에서 유사하다.
+
+### 결론
+
+- 2번 방식으로 쿠키 폼 로그인 구현 진행
+
+---
+
+### JWT Login
+**📍 흐름**
+
+1. 로그인 성공 시 JWT발급
+2. 이후 해당 토큰으로 검증을 진행하며 기능 이용
+    1. `/api/jwt/refresh`를 호출하면 새 엑세스 토큰을 발급
+    2. 로그인 시 한 번에 `accessToken`, `refreshToken`을 발급
+
+---
+
+### 테스트 화면
+<img width="612" height="996" alt="스크린샷 2025-08-20 오후 5 55 06" src="https://github.com/user-attachments/assets/2ac3610a-249f-4a01-b35c-8b1542d7cb63" />
+
+---
 
 ### 📌 Contact
 - Email: kkamang0322@gmail.com
