@@ -1,0 +1,43 @@
+name: Create Branch From Issue
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: dev # 브랜치 생성할 부모 브랜치
+
+      - name: Set up Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Extract branch name
+        run: |
+          echo "이슈 본문:"
+          echo "${{ github.event.issue.body }}"
+                    branch_name=$(echo "${{ github.event.issue.body }}" \
+            | perl -pe 's/\\n/\n/g' \
+            | awk '/🍃 브랜치명/ { while (getline line) { if (line != "") { print line; break }}}' \
+            | xargs)
+          echo "추출된 브랜치명: $branch_name"
+          echo "branch_name=$branch_name" >> $GITHUB_ENV
+
+      - name: Create and push branch
+        run: |
+          if [ -z "${{ env.branch_name }}" ]; then
+            echo "⚠️ 브랜치명이 비어 있습니다. 브랜치를 생성하지 않습니다."
+            exit 0
+          fi
+          echo "Creating branch: ${{ env.branch_name }}"
+          git checkout -b ${{ env.branch_name }}
+          git push origin ${{ env.branch_name }}

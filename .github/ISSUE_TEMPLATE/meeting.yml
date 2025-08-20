@@ -1,0 +1,37 @@
+name: "🙋 Meeting"
+description: '팀원들과 논의할 내용이 있나요? (Jira Story와 연동됩니다.)'
+labels: [meeting]
+title: '회의 주제를 입력하세요'
+body:
+  - type: input
+    id: branch
+    attributes:
+      label: '🍃 브랜치명 (관련 브랜치가 있다면)'
+      description: '이 회의와 관련된 브랜치명을 작성해주세요 (예: feature/xxx), 없으면 적절히 입력'
+      placeholder: 'meeting/topic'
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: '📝 회의 주제'
+      description: 논의할 핵심 주제를 간단히 설명해주세요.
+    validations:
+      required: false
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: '✅ 회의에서 다룰 항목'
+      description: 회의에서 다뤄야 할 내용이나 과제를 나열해주세요.
+    validations:
+      required: false
+
+  - type: textarea
+    id: etc
+    attributes:
+      label: '📌 기타'
+      description: 전달할 추가 내용이 있다면 작성해주세요.
+    validations:
+      required: false
