@@ -1,4 +1,4 @@
-## 📋 Spring Security Multi-Login Example
+## 📋 Login Example
 이 프로젝트는 **Spring Security**를 활용하여 다양한 로그인 방식을 구현한 예제입니다.  
 (1) **세션 로그인**, (2) **서명 쿠키 기반 로그인**, (3) **JWT 기반 로그인** — 세 가지 방법을 비교·연습할 수 있도록 구성되었습니다.  
 thymeleaf를 이용해서 테스트 페이지를 작성하였습니다.
